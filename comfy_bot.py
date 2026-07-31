@@ -7,66 +7,78 @@ import pyautogui
 
 # Конфигурация
 CSV_FILE = 'links.csv'
-SAVE_FOLDER = 'screenshots'
+SAVE_FOLDER = 'screens'
 
 def main():
-    # 1. Создаем папку для скриншотов, если ее нет
+    print("Старт программы...")
+    
+    # 1. Проверяем наличие файла с ссылками
+    if not os.path.exists(CSV_FILE):
+        print(f"ОШИБКА: Файл {CSV_FILE} не найден в папке с приложением!")
+        input("Нажмите Enter для выхода...")
+        return
+
+    # 2. Создаем папку для скриншотов
     if not os.path.exists(SAVE_FOLDER):
         os.makedirs(SAVE_FOLDER)
+        print(f"Создана папка: {SAVE_FOLDER}")
 
-    # 2. Настройка браузера Chrome
+    # 3. Настройка браузера Chrome
+    print("Инициализация браузера Chrome...")
     options = webdriver.ChromeOptions()
-    options.add_argument('--start-maximized') # Открыть на весь экран
-    # Убираем плашку "Браузером управляет автоматизированное тестовое ПО"
+    options.add_argument('--start-maximized')
     options.add_experimental_option("excludeSwitches", ['enable-automation'])
     
-    print("Запуск браузера...")
-    driver = webdriver.Chrome(options=options)
+    try:
+        driver = webdriver.Chrome(options=options)
+        print("Браузер успешно запущен.")
+    except Exception as e:
+        print(f"ОШИБКА при запуске браузера: {e}")
+        print("Убедитесь, что у вас установлен Google Chrome.")
+        input("Нажмите Enter для выхода...")
+        return
 
     try:
-        # 3. Читаем файл с ссылками
+        # 4. Читаем файл с ссылками
         with open(CSV_FILE, mode='r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
+            reader = list(csv.DictReader(file))
+            print(f"Найдено строк в CSV: {len(reader)}")
             
+            if len(reader) == 0:
+                print("ВНИМАНИЕ: Файл links.csv пустой или не содержит данных под заголовками!")
+
             for row in reader:
                 url = row['URL']
                 section_name = row['Раздел']
                 
-                print(f"Открываю: {section_name}")
+                print(f"-> Открываю раздел: {section_name} ({url})")
                 driver.get(url)
                 
-                # Ждем загрузки страницы и баннеров (настройте время под скорость интернета)
+                print("Жду загрузки страницы (7 сек)...")
                 time.sleep(7) 
                 
-                # 4. Открываем календарь Windows (горячая клавиша Win + Alt + D)
+                print("Вызываю календарь Windows...")
                 pyautogui.hotkey('win', 'alt', 'd')
-                
-                # Ждем анимацию появления календаря
                 time.sleep(1.5)
                 
-                # 5. Формируем безопасное имя файла
                 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-                # Убираем запрещенные символы из названия раздела
                 safe_name = "".join([c for c in section_name if c.isalnum() or c in ' -_']).strip()
                 filename = f"{SAVE_FOLDER}/{timestamp}_{safe_name}.png"
                 
-                # 6. Делаем снимок всего экрана
+                print( делаю скриншот...")
                 pyautogui.screenshot(filename)
-                print(f" Сохранено: {filename}")
+                print(f"Скриншот сохранен: {filename}")
                 
-                # 7. Скрываем календарь
+                print("Скрываю календарь...")
                 pyautogui.hotkey('win', 'alt', 'd')
-                
-                # Небольшая пауза перед следующим разделом
                 time.sleep(1)
                 
-    except FileNotFoundError:
-        print(f" ОШИБКА: Файл {CSV_FILE} не найден. Проверьте, что он лежит рядом со скриптом.")
     except Exception as e:
-        print(f" Произошла ошибка: {e}")
+        print(f"Произошла ошибка во время работы цикла: {e}")
     finally:
         driver.quit()
-        print("Скрипт завершил работу!")
+        print("Работа скрипта завершена.")
+        input("Нажмите Enter для выхода...")
 
 if __name__ == '__main__':
     main()
