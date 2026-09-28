@@ -1,0 +1,23 @@
+{
+  "youtube": {
+    "enabled": false,
+    "client_secret_path": "youtube_client_secret.json",
+    "token_path": "youtube_token.json",
+    "privacy": "private",
+    "category_id": "22"
+  },
+  "tiktok": {
+    "enabled": false,
+    "client_key": "",
+    "client_secret": "",
+    "redirect_uri": "http://localhost:8722/callback",
+    "token_path": "tiktok_token.json",
+    "privacy": "SELF_ONLY"
+  },
+  "instagram": {
+    "enabled": false,
+    "ig_user_id": "",
+    "access_token_env": "IG_ACCESS_TOKEN",
+    "public_video_base_url": ""
+  }
+}

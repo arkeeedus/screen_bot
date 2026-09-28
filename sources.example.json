@@ -1,0 +1,9 @@
+{
+  "direct": [
+    "https://www.youtube.com/watch?v=VIDEO_ID"
+  ],
+  "channels": [
+    "https://www.youtube.com/@your_channel_handle"
+  ],
+  "max_per_channel_check": 5
+}
