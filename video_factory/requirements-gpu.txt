@@ -1,9 +1,0 @@
-# Локальная генерация на NVIDIA RTX (картинки через Stable Diffusion/FLUX, озвучка Silero).
-# Сначала поставьте torch с CUDA:
-#   pip install torch --index-url https://download.pytorch.org/whl/cu124
-diffusers>=0.30
-transformers>=4.44
-accelerate>=0.33
-sentencepiece
-protobuf
-numpy
